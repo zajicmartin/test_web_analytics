@@ -88,6 +88,8 @@
     }
     button { margin: 5px; padding: 0.5rem 1rem; }
     nav a { margin-right: 1rem; }
+    form label { font-weight: bold; }
+    form input, form textarea { width: 100%; max-width: 400px; }
   </style>
 </head>
 <body>
@@ -104,11 +106,42 @@
     Spustit testovací událost
   </button>
 
+  <h2>Kontaktní formulář</h2>
+  <form id="contactForm">
+    <label for="name">Jméno:</label><br />
+    <input type="text" id="name" name="name" /><br /><br />
+    
+    <label for="email">Email:</label><br />
+    <input type="email" id="email" name="email" /><br /><br />
+    
+    <label for="message">Zpráva:</label><br />
+    <textarea id="message" name="message"></textarea><br /><br />
+    
+    <button type="submit">Odeslat</button>
+  </form>
+
   <div id="cookie-banner">
     <p>Tato stránka používá cookies pro analytiku a personalizaci. Souhlasíte?</p>
     <button onclick="acceptCookies()">Souhlasím</button>
     <button onclick="rejectCookies()">Nesouhlasím</button>
   </div>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      dataLayer.push({
+        event: 'form_submit',
+        form_id: 'contactForm',
+        form_data: {
+          name: this.name.value,
+          email: this.email.value,
+          message: this.message.value
+        }
+      });
+      alert('Formulář byl úspěšně odeslán!');
+      this.reset();
+    });
+  </script>
 
 </body>
 </html>
