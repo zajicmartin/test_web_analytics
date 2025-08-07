@@ -2,8 +2,7 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8" />
-  <title>Domů</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Homepage - Test Web Analytics</title>
 
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,6 +13,7 @@
       if (parts.length === 2) return decodeURIComponent(parts.pop().split(";").shift());
       return null;
     }
+
     function setCookie(name, value, days) {
       const d = new Date();
       d.setTime(d.getTime() + (days*24*60*60*1000));
@@ -32,17 +32,26 @@
 
     const defaultConsent = {
       ad_storage: 'denied',
+      analytics_storage: 'denied',
       ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied'
+      ad_personalization: 'denied'
     };
 
-    (function() {
+    (function(){
       const consent = getConsentFromCookie() || defaultConsent;
-      window.dataLayer.push(['consent', 'update', consent]);
+      window.dataLayer.push({
+        'event': 'consent',
+        'gtm.consentSettings': {
+          ad_storage: consent.ad_storage,
+          analytics_storage: consent.analytics_storage,
+          ad_user_data: consent.ad_user_data,
+          ad_personalization: consent.ad_personalization
+        }
+      });
     })();
   </script>
 
+  <!-- GTM script -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -78,18 +87,15 @@
     <a href="contact.html">Kontakt</a>
   </nav>
 
-  <h1>Domů</h1>
+  <h1>Homepage - Test Web Analytics</h1>
 
   <h2>Kontaktní formulář</h2>
-  <form id="contactForm">
+  <form id="homeForm">
     <label for="name">Jméno:</label><br />
     <input type="text" id="name" name="name" /><br /><br />
     
     <label for="email">Email:</label><br />
     <input type="email" id="email" name="email" /><br /><br />
-    
-    <label for="message">Zpráva:</label><br />
-    <textarea id="message" name="message"></textarea><br /><br />
     
     <button type="submit">Odeslat</button>
   </form>
@@ -109,9 +115,12 @@
     }
 
     function applyConsent(consent) {
-      window.dataLayer.push(['consent', 'update', consent]);
+      window.dataLayer.push({
+        event: 'consent',
+        'gtm.consentSettings': consent
+      });
       setCookie('cookie_consent', JSON.stringify(consent), 365);
-      window.dataLayer.push({event:'user_consent_given', consent_status: consent.ad_storage});
+      window.dataLayer.push({event:'user_consent_changed', consent_status: consent.ad_storage});
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -125,9 +134,9 @@
       document.getElementById('acceptCookies').addEventListener('click', () => {
         const consentGranted = {
           ad_storage: 'granted',
+          analytics_storage: 'granted',
           ad_user_data: 'granted',
-          ad_personalization: 'granted',
-          analytics_storage: 'granted'
+          ad_personalization: 'granted'
         };
         applyConsent(consentGranted);
         hideBanner();
@@ -136,24 +145,22 @@
       document.getElementById('rejectCookies').addEventListener('click', () => {
         const consentDenied = {
           ad_storage: 'denied',
+          analytics_storage: 'denied',
           ad_user_data: 'denied',
-          ad_personalization: 'denied',
-          analytics_storage: 'denied'
+          ad_personalization: 'denied'
         };
         applyConsent(consentDenied);
         hideBanner();
       });
 
-      // Formular event po odeslani
-      document.getElementById('contactForm').addEventListener('submit', function(e) {
+      document.getElementById('homeForm').addEventListener('submit', function(e) {
         e.preventDefault();
         window.dataLayer.push({
           event: 'form_submit',
-          form_id: 'contactForm',
+          form_id: 'homeForm',
           form_data: {
             name: this.name.value,
-            email: this.email.value,
-            message: this.message.value
+            email: this.email.value
           }
         });
         alert('Formulář byl úspěšně odeslán!');
