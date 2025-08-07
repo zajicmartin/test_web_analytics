@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Testovací stránka pro GTM a Consent Mode</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Consent Mode v2.0 - výchozí nastavení -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      wait_for_update: 500
+    });
+  </script>
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5DN9DJ9F');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem;
+    }
+    #cookie-banner {
+      background: #f8f8f8;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      max-width: 320px;
+      z-index: 9999;
+    }
+    button {
+      margin: 5px;
+      padding: 0.5rem 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5DN9DJ9F"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <h1>Testovací stránka pro analytiku</h1>
+
+  <button onclick="fireCustomEvent()">Spustit testovací událost</button>
+
+  <h2>Formulář (odesílá dataLayer událost)</h2>
+  <form id="test-form">
+    <label for="email">E-mail:</label><br>
+    <input type="email" id="email" name="email" /><br><br>
+    <button type="submit">Odeslat</button>
+  </form>
+
+  <!-- Cookie lišta -->
+  <div id="cookie-banner">
+    <p>Tato stránka používá cookies pro analytiku a personalizaci. Souhlasíte?</p>
+    <button onclick="acceptCookies()">Souhlasím</button>
+    <button onclick="rejectCookies()">Nesouhlasím</button>
+  </div>
+
+  <script>
+    // Tlačítko test event
+    function fireCustomEvent() {
+      dataLayer.push({
+        event: 'custom_event_click',
+        event_category: 'Test',
+        event_action: 'Click',
+        event_label: 'Test Button'
+      });
+      alert('Událost byla odeslána do dataLayer.');
+    }
+
+    // Odeslání formuláře
+    document.getElementById('test-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+
+      dataLayer.push({
+        event: 'form_submission',
+        form_type: 'test_form',
+        form_email: email
+      });
+
+      alert('Formulář odeslán a dataLayer událost spuštěna!');
+      document.getElementById('test-form').reset();
+    });
+
+    // Consent: souhlas
+    function acceptCookies() {
+      gtag('consent', 'update', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted'
+      });
+      dataLayer.push({ event: 'user_consent_given', consent_status: 'granted' });
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    // Consent: nesouhlas
+    function rejectCookies() {
+      gtag('consent', 'update', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied'
+      });
+      dataLayer.push({ event: 'user_consent_given', consent_status: 'denied' });
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
