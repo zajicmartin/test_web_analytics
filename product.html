@@ -2,12 +2,23 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8" />
-  <title>Detail produktu</title>
+  <title>Produkt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+  </script>
+
+  <!-- GTM načtení hned -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5DN9DJ9F');
+  </script>
+
+  <script>
     function setCookie(name, value, days) {
       const d = new Date();
       d.setTime(d.getTime() + (days*24*60*60*1000));
@@ -20,7 +31,7 @@
       return null;
     }
     function applyConsent(consent) {
-      gtag('consent', 'update', consent);
+      window.dataLayer.push(['consent', 'update', consent]);
     }
     function initConsent() {
       let consentCookie = getCookie('cookie_consent');
@@ -45,7 +56,7 @@
       };
       applyConsent(consent);
       setCookie('cookie_consent', JSON.stringify(consent), 365);
-      dataLayer.push({event:'user_consent_given', consent_status: 'granted'});
+      window.dataLayer.push({event:'user_consent_given', consent_status: 'granted'});
       document.getElementById('cookie-banner').style.display = 'none';
     }
     function rejectCookies() {
@@ -57,20 +68,12 @@
       };
       applyConsent(consent);
       setCookie('cookie_consent', JSON.stringify(consent), 365);
-      dataLayer.push({event:'user_consent_given', consent_status: 'denied'});
+      window.dataLayer.push({event:'user_consent_given', consent_status: 'denied'});
       document.getElementById('cookie-banner').style.display = 'none';
     }
-    window.onload = function() {
+    window.addEventListener('DOMContentLoaded', function() {
       initConsent();
-    };
-  </script>
-
-  <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5DN9DJ9F');
+    });
   </script>
 
   <style>
@@ -100,8 +103,10 @@
 
   <h1>Detail produktu</h1>
 
-  <button onclick="dataLayer.push({event:'product_view', product_id:'123', product_name:'Super produkt'}); alert('Produkt view event odeslán');">
-    Odeslat event z produktu
+  <p>Toto je detail produktu pro testování webové analytiky.</p>
+
+  <button onclick="window.dataLayer.push({event:'product_view', product_id:'12345', product_name:'Test Produkt'}); alert('Produktová událost odeslána');">
+    Odeslat událost zobrazení produktu
   </button>
 
   <div id="cookie-banner">
