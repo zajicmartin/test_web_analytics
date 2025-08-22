@@ -6,6 +6,9 @@
   <title>Test Web Analytics - Kontakt</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2rem; }
+    a { text-decoration: none; color: #007BFF; margin-right: 1rem; }
+    a:hover { text-decoration: underline; }
+    nav { margin-bottom: 2rem; }
     button { margin-right: 1rem; padding: 0.5rem 1rem; font-size: 1rem; }
     #consent-banner { 
       position: fixed; bottom: 1rem; left: 1rem; right: 1rem; background: #eee; padding: 1rem; border: 1px solid #ccc;
@@ -81,6 +84,13 @@
   </noscript>
   <!-- End Google Tag Manager (noscript) -->
 
+  <!-- Menu -->
+  <nav>
+    <a href="index.html">Domů</a>
+    <a href="product.html">Produkt</a>
+    <a href="contact.html">Kontakt</a>
+  </nav>
+
   <h1>Kontakt</h1>
   <p>Vyplňte formulář níže a po odeslání se odešle event do dataLayer.</p>
 
@@ -118,20 +128,14 @@
 
       document.cookie = "cookie_consent=" + encodeURIComponent(JSON.stringify(consentData)) + ";path=/;max-age=31536000";
 
-      window.dataLayer.push({event: 'consent_update'});
+      
       gtag('consent', 'update', consentData);
-
+      window.dataLayer.push({event: 'consent_update'});
       document.getElementById('consent-banner').style.display = 'none';
-      alert('Consent nastaven: ' + (allowed ? 'Souhlas' : 'Nesouhlas'));
+      
     }
 
     window.onload = function() {
-      function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null;
-      }
       if (!getCookie('cookie_consent')) {
         document.getElementById('consent-banner').style.display = 'flex';
       }
